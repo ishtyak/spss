@@ -1,14 +1,21 @@
-import React, { useState, useMemo } from "react";
+import { useState, useMemo } from "react";
+import type { DataRow, SavVariable } from "../../types";
 import { correlationMatrix, pca } from "./statsUtils";
+import SearchableSelect from "./SearchableSelect";
 
-export default function FactorAnalysis({ data, variables }) {
-    const [selectedVars, setSelectedVars] = useState([]);
+interface FactorAnalysisProps {
+    data: DataRow[];
+    variables: SavVariable[];
+}
+
+export default function FactorAnalysis({ data, variables }: FactorAnalysisProps) {
+    const [selectedVars, setSelectedVars] = useState<string[]>([]);
     const [activeView, setActiveView] = useState("correlation");
     const [maxFactors, setMaxFactors] = useState(5);
 
     const numericVars = variables.filter((v) => v.type === "numeric");
 
-    const toggleVar = (name) => {
+    const toggleVar = (name: string) => {
         setSelectedVars((prev) => prev.includes(name) ? prev.filter((v) => v !== name) : [...prev, name]);
     };
 
@@ -30,7 +37,7 @@ export default function FactorAnalysis({ data, variables }) {
         }
     }, [data, selectedVars, maxFactors]);
 
-    const getCorrelationColor = (r) => {
+    const getCorrelationColor = (r: number) => {
         const abs = Math.abs(r);
         if (r > 0) return `rgba(59, 130, 246, ${abs * 0.7})`;
         return `rgba(239, 68, 68, ${abs * 0.7})`;
@@ -51,10 +58,14 @@ export default function FactorAnalysis({ data, variables }) {
                 {activeView === "pca" && (
                     <div className="flex flex-col gap-1">
                         <label className="text-xs font-semibold text-gray-500">Max Factors</label>
-                        <select value={maxFactors} onChange={(e) => setMaxFactors(Number(e.target.value))}
-                            className="border rounded-lg px-3 py-1.5 text-sm">
-                            {[2, 3, 4, 5, 7, 10].map((n) => <option key={n} value={n}>{n}</option>)}
-                        </select>
+                        <SearchableSelect
+                            options={[2, 3, 4, 5, 7, 10].map((n) => ({ value: String(n), label: String(n) }))}
+                            value={String(maxFactors)}
+                            onChange={(v) => setMaxFactors(Number(v))}
+                            placeholder="Select…"
+                            searchPlaceholder="Search…"
+                            minWidth="100px"
+                        />
                     </div>
                 )}
             </div>

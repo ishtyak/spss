@@ -1,7 +1,16 @@
-import React, { useState, useMemo } from "react";
+import { useState, useMemo } from "react";
+import type { DataRow, SavVariable, ValueLabels } from "../../types";
 import { contingencyTable, chiSquareTest, significanceLetters } from "./statsUtils";
+import SearchableSelect from "./SearchableSelect";
 
-export default function CrossTabulation({ data, variables, valueLabels, weights }) {
+interface CrossTabulationProps {
+    data: DataRow[];
+    variables: SavVariable[];
+    valueLabels: ValueLabels;
+    weights: number[] | null;
+}
+
+export default function CrossTabulation({ data, variables, valueLabels, weights }: CrossTabulationProps) {
     const [rowVar, setRowVar] = useState("");
     const [colVar, setColVar] = useState("");
     const [alpha, setAlpha] = useState(0.05);
@@ -10,7 +19,7 @@ export default function CrossTabulation({ data, variables, valueLabels, weights 
     const [showRowPct, setShowRowPct] = useState(false);
     const [showSigLetters, setShowSigLetters] = useState(true);
 
-    const getLabel = (varName, value) => {
+    const getLabel = (varName: string, value: string | number | null) => {
         const vl = valueLabels[varName];
         if (!vl) return String(value);
         const match = vl.find((l) => String(l.value) === String(value));
@@ -39,32 +48,36 @@ export default function CrossTabulation({ data, variables, valueLabels, weights 
             <div className="flex flex-wrap items-end gap-4 bg-gray-50 rounded-lg p-4">
                 <div className="flex flex-col gap-1">
                     <label className="text-xs font-semibold text-gray-500">Row Variable</label>
-                    <select value={rowVar} onChange={(e) => setRowVar(e.target.value)}
-                        className="border rounded-lg px-3 py-1.5 text-sm min-w-[180px]">
-                        <option value="">Select…</option>
-                        {catVars.map((v) => (
-                            <option key={v.name} value={v.name}>{v.name}{v.label ? ` – ${v.label}` : ""}</option>
-                        ))}
-                    </select>
+                    <SearchableSelect
+                        options={catVars.map((v) => ({ value: v.name, label: v.name + (v.label ? ` – ${v.label}` : "") }))}
+                        value={rowVar}
+                        onChange={setRowVar}
+                        placeholder="Select row variable…"
+                        searchPlaceholder="Search variable…"
+                        minWidth="200px"
+                    />
                 </div>
                 <div className="flex flex-col gap-1">
                     <label className="text-xs font-semibold text-gray-500">Column Variable</label>
-                    <select value={colVar} onChange={(e) => setColVar(e.target.value)}
-                        className="border rounded-lg px-3 py-1.5 text-sm min-w-[180px]">
-                        <option value="">Select…</option>
-                        {catVars.map((v) => (
-                            <option key={v.name} value={v.name}>{v.name}{v.label ? ` – ${v.label}` : ""}</option>
-                        ))}
-                    </select>
+                    <SearchableSelect
+                        options={catVars.map((v) => ({ value: v.name, label: v.name + (v.label ? ` – ${v.label}` : "") }))}
+                        value={colVar}
+                        onChange={setColVar}
+                        placeholder="Select column variable…"
+                        searchPlaceholder="Search variable…"
+                        minWidth="200px"
+                    />
                 </div>
                 <div className="flex flex-col gap-1">
                     <label className="text-xs font-semibold text-gray-500">Significance α</label>
-                    <select value={alpha} onChange={(e) => setAlpha(Number(e.target.value))}
-                        className="border rounded-lg px-3 py-1.5 text-sm">
-                        <option value={0.01}>0.01</option>
-                        <option value={0.05}>0.05</option>
-                        <option value={0.10}>0.10</option>
-                    </select>
+                    <SearchableSelect
+                        options={[{ value: "0.01", label: "0.01" }, { value: "0.05", label: "0.05" }, { value: "0.10", label: "0.10" }]}
+                        value={String(alpha)}
+                        onChange={(v) => setAlpha(Number(v))}
+                        placeholder="Select α…"
+                        searchPlaceholder="Search…"
+                        minWidth="100px"
+                    />
                 </div>
                 <div className="flex items-center gap-4 text-sm">
                     <label className="flex items-center gap-1.5 cursor-pointer">

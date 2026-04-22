@@ -1,13 +1,15 @@
 import SavViewer from './components/SavViewer'
-import './App.css'
+import LandingPage from './pages/LandingPage'
+import { useAuth } from './context/useAuth'
 
 function App() {
+  const { isAuthenticated } = useAuth()
 
-  return (
-    <>
-      <SavViewer />
-    </>
-  )
+  if (!isAuthenticated) {
+    return <LandingPage />
+  }
+
+  return <SavViewer />
 }
 
 export default App

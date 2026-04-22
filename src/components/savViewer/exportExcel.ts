@@ -1,10 +1,16 @@
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
+import type { DataRow, SavVariable, ValueLabels } from "../../types";
 
 /**
  * Export data to Excel (.xlsx) with Data + Variable sheets.
  */
-export function exportToExcel(data, variables, valueLabels, fileName = "export") {
+export function exportToExcel(
+    data: DataRow[],
+    variables: SavVariable[],
+    valueLabels: ValueLabels,
+    fileName = "export"
+): void {
     const wb = XLSX.utils.book_new();
 
     // ── Data sheet ──────────────────────────────────────────────────

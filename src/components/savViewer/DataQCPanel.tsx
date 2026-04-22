@@ -1,5 +1,13 @@
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+import type { DataRow, SavVariable, ValueLabels } from "../../types";
 import { dataQC } from "./statsUtils";
+import SearchableSelect from "./SearchableSelect";
+
+interface DataQCPanelProps {
+    data: DataRow[];
+    variables: SavVariable[];
+    valueLabels: ValueLabels;
+}
 
 const SEVERITY_COLORS = {
     high: "bg-red-100 text-red-700 border-red-200",
@@ -13,7 +21,7 @@ const SEVERITY_BADGES = {
     low: "bg-blue-500",
 };
 
-export default function DataQCPanel({ data, variables, valueLabels }) {
+export default function DataQCPanel({ data, variables, valueLabels }: DataQCPanelProps) {
     const [filterType, setFilterType] = useState("all");
     const [filterSeverity, setFilterSeverity] = useState("all");
 
@@ -60,23 +68,33 @@ export default function DataQCPanel({ data, variables, valueLabels }) {
             <div className="flex flex-wrap gap-4 bg-gray-50 rounded-lg p-3">
                 <div className="flex flex-col gap-1">
                     <label className="text-xs font-semibold text-gray-500">Issue Type</label>
-                    <select value={filterType} onChange={(e) => setFilterType(e.target.value)}
-                        className="border rounded-lg px-3 py-1.5 text-sm">
-                        <option value="all">All Types</option>
-                        {issueTypes.map((t) => (
-                            <option key={t} value={t}>{t.replace(/_/g, " ")}</option>
-                        ))}
-                    </select>
+                    <SearchableSelect
+                        options={[
+                            { value: "all", label: "All Types" },
+                            ...issueTypes.map((t) => ({ value: t, label: t.replace(/_/g, " ") }))
+                        ]}
+                        value={filterType}
+                        onChange={setFilterType}
+                        placeholder="All Types"
+                        searchPlaceholder="Search type…"
+                        minWidth="160px"
+                    />
                 </div>
                 <div className="flex flex-col gap-1">
                     <label className="text-xs font-semibold text-gray-500">Severity</label>
-                    <select value={filterSeverity} onChange={(e) => setFilterSeverity(e.target.value)}
-                        className="border rounded-lg px-3 py-1.5 text-sm">
-                        <option value="all">All</option>
-                        <option value="high">High</option>
-                        <option value="medium">Medium</option>
-                        <option value="low">Low</option>
-                    </select>
+                    <SearchableSelect
+                        options={[
+                            { value: "all", label: "All" },
+                            { value: "high", label: "High" },
+                            { value: "medium", label: "Medium" },
+                            { value: "low", label: "Low" },
+                        ]}
+                        value={filterSeverity}
+                        onChange={setFilterSeverity}
+                        placeholder="All"
+                        searchPlaceholder="Search…"
+                        minWidth="120px"
+                    />
                 </div>
                 <div className="flex items-end text-sm text-gray-500">
                     {filtered.length} issue{filtered.length !== 1 ? "s" : ""} shown

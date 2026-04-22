@@ -1,7 +1,19 @@
-import React, { useState, useMemo } from "react";
+import { useState, useMemo } from "react";
+import type { DataRow, SavVariable, ValueLabels } from "../../types";
 import { getWeightInfo, weightedDescriptives, weightedFrequency } from "./statsUtils";
+import SearchableSelect from "./SearchableSelect";
 
-export default function DataWeighting({ data, variables, valueLabels, weights, setWeights, weightVar, setWeightVar }) {
+interface DataWeightingProps {
+    data: DataRow[];
+    variables: SavVariable[];
+    valueLabels: ValueLabels;
+    weights: number[] | null;
+    setWeights: (weights: number[] | null) => void;
+    weightVar: string;
+    setWeightVar: (varName: string) => void;
+}
+
+export default function DataWeighting({ data, variables, valueLabels, weights, setWeights, weightVar, setWeightVar }: DataWeightingProps) {
     const [compareVar, setCompareVar] = useState("");
 
     const numericVars = variables.filter((v) => v.type === "numeric");
@@ -32,7 +44,7 @@ export default function DataWeighting({ data, variables, valueLabels, weights, s
         } else {
             // Frequency comparison
             const values = data.map((r) => r[compareVar]);
-            const unwFreq = {};
+            const unwFreq: Record<string, number> = {};
             for (const val of values) {
                 const k = val == null ? "__NULL__" : String(val);
                 unwFreq[k] = (unwFreq[k] || 0) + 1;
@@ -40,8 +52,8 @@ export default function DataWeighting({ data, variables, valueLabels, weights, s
             const wFreq = weightedFrequency(values, weightInfo.weights);
             const allKeys = [...new Set([...Object.keys(unwFreq), ...Object.keys(wFreq)])].sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
 
-            const unwTotal = Object.values(unwFreq).reduce((s, v) => s + v, 0);
-            const wTotal = Object.values(wFreq).reduce((s, v) => s + v, 0);
+            const unwTotal = Object.values(unwFreq).reduce((s: number, v: number) => s + v, 0 as number);
+            const wTotal = Object.values(wFreq).reduce((s: number, v: number) => s + v, 0 as number);
 
             const rows = allKeys.map((k) => {
                 const uw = unwFreq[k] || 0;
@@ -80,13 +92,17 @@ export default function DataWeighting({ data, variables, valueLabels, weights, s
             <div className="flex flex-wrap items-end gap-4 bg-gray-50 rounded-lg p-4">
                 <div className="flex flex-col gap-1">
                     <label className="text-xs font-semibold text-gray-500">Weight Variable</label>
-                    <select value={weightVar} onChange={(e) => setWeightVar(e.target.value)}
-                        className="border rounded-lg px-3 py-1.5 text-sm min-w-[200px]">
-                        <option value="">None (unweighted)</option>
-                        {numericVars.map((v) => (
-                            <option key={v.name} value={v.name}>{v.name}{v.label ? ` – ${v.label}` : ""}</option>
-                        ))}
-                    </select>
+                    <SearchableSelect
+                        options={[
+                            { value: "", label: "None (unweighted)" },
+                            ...numericVars.map((v) => ({ value: v.name, label: v.name + (v.label ? ` – ${v.label}` : "") }))
+                        ]}
+                        value={weightVar}
+                        onChange={setWeightVar}
+                        placeholder="None (unweighted)"
+                        searchPlaceholder="Search variable…"
+                        minWidth="220px"
+                    />
                 </div>
                 {weightVar && (
                     <>
@@ -133,13 +149,17 @@ export default function DataWeighting({ data, variables, valueLabels, weights, s
                     <div className="flex items-end gap-4 bg-gray-50 rounded-lg p-3">
                         <div className="flex flex-col gap-1">
                             <label className="text-xs font-semibold text-gray-500">Compare Variable (weighted vs unweighted)</label>
-                            <select value={compareVar} onChange={(e) => setCompareVar(e.target.value)}
-                                className="border rounded-lg px-3 py-1.5 text-sm min-w-[200px]">
-                                <option value="">Select…</option>
-                                {variables.map((v) => (
-                                    <option key={v.name} value={v.name}>{v.name}{v.label ? ` – ${v.label}` : ""}</option>
-                                ))}
-                            </select>
+                            <SearchableSelect
+                                options={[
+                                    { value: "", label: "Select…" },
+                                    ...variables.map((v) => ({ value: v.name, label: v.name + (v.label ? ` – ${v.label}` : "") }))
+                                ]}
+                                value={compareVar}
+                                onChange={setCompareVar}
+                                placeholder="Select variable…"
+                                searchPlaceholder="Search variable…"
+                                minWidth="220px"
+                            />
                         </div>
                     </div>
 
@@ -176,7 +196,7 @@ export default function DataWeighting({ data, variables, valueLabels, weights, s
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {comparison.rows.map((row) => (
+                                    {comparison.rows?.map((row) => (
                                         <tr key={row.value} className="hover:bg-sky-50">
                                             <td className="px-3 py-1.5 text-xs text-gray-700 border-r border-b">
                                                 {row.label !== row.value ? `${row.value} (${row.label})` : row.value}

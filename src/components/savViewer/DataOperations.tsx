@@ -1,17 +1,30 @@
-import React, { useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { enqueueSnackbar } from "notistack";
+import type { DataRow, SavVariable, SavParseResult } from "../../types";
+
+interface SavParserConstructor {
+    new (buffer: ArrayBuffer): { parse(): SavParseResult };
+}
+
+interface DataOperationsProps {
+    data: DataRow[];
+    variables: SavVariable[];
+    setData: (data: DataRow[]) => void;
+    setVariables: (variables: SavVariable[]) => void;
+    SavParser: SavParserConstructor;
+}
 
 // We reuse the SavParser from the parent — passed as prop
-export default function DataOperations({ data, variables, setData, setVariables, SavParser }) {
+export default function DataOperations({ data, variables, setData, setVariables, SavParser }: DataOperationsProps) {
     const [operation, setOperation] = useState("append");
-    const [secondaryData, setSecondaryData] = useState(null);
-    const [secondaryVars, setSecondaryVars] = useState([]);
+    const [secondaryData, setSecondaryData] = useState<DataRow[] | null>(null);
+    const [secondaryVars, setSecondaryVars] = useState<SavVariable[]>([]);
     const [secondaryFileName, setSecondaryFileName] = useState("");
-    const [stackVars, setStackVars] = useState([]);
+    const [stackVars, setStackVars] = useState<string[]>([]);
     const [stackTarget, setStackTarget] = useState("stacked_value");
     const [stackIdVar, setStackIdVar] = useState("source_var");
 
-    const handleSecondaryFile = useCallback(async (file) => {
+    const handleSecondaryFile = useCallback(async (file: File) => {
         if (!file || !file.name.toLowerCase().endsWith(".sav")) {
             enqueueSnackbar("Please upload a .sav file", { variant: "warning" });
             return;
@@ -25,7 +38,7 @@ export default function DataOperations({ data, variables, setData, setVariables,
             setSecondaryFileName(file.name);
             enqueueSnackbar(`Loaded ${result.data.length} rows from ${file.name}`, { variant: "success" });
         } catch (err) {
-            enqueueSnackbar("Error reading secondary file: " + err.message, { variant: "error" });
+            enqueueSnackbar("Error reading secondary file: " + (err as Error).message, { variant: "error" });
         }
     }, [SavParser]);
 
@@ -34,7 +47,7 @@ export default function DataOperations({ data, variables, setData, setVariables,
         // Merge by matching variable names
         const allVarNames = new Set([...variables.map((v) => v.name), ...secondaryVars.map((v) => v.name)]);
         const merged = [...data, ...secondaryData.map((row) => {
-            const newRow = {};
+            const newRow: DataRow = {};
             for (const vn of allVarNames) {
                 newRow[vn] = row[vn] ?? null;
             }
@@ -61,27 +74,27 @@ export default function DataOperations({ data, variables, setData, setVariables,
             return;
         }
         const otherVars = variables.filter((v) => !stackVars.includes(v.name));
-        const stacked = [];
+        const stacked: DataRow[] = [];
         for (const row of data) {
             for (const sv of stackVars) {
-                const newRow = {};
+                const newRow: DataRow = {};
                 for (const ov of otherVars) newRow[ov.name] = row[ov.name];
                 newRow[stackTarget] = row[sv];
                 newRow[stackIdVar] = sv;
                 stacked.push(newRow);
             }
         }
-        const newVars = [
+        const newVars: SavVariable[] = [
             ...otherVars,
-            { name: stackTarget, type: "numeric", label: "Stacked Value", width: 8 },
-            { name: stackIdVar, type: "string", label: "Source Variable", width: 32 },
+            { name: stackTarget, type: "numeric", label: "Stacked Value", width: 8, printFormat: 0, writeFormat: 0, missingValues: [], measure: "", columnWidth: 8, alignment: "" },
+            { name: stackIdVar, type: "string", label: "Source Variable", width: 32, printFormat: 0, writeFormat: 0, missingValues: [], measure: "", columnWidth: 8, alignment: "" },
         ];
         setData(stacked);
         setVariables(newVars);
         enqueueSnackbar(`Stacked ${stackVars.length} variables → ${stacked.length} rows`, { variant: "success" });
     };
 
-    const toggleStackVar = (name) => {
+    const toggleStackVar = (name: string) => {
         setStackVars((prev) => prev.includes(name) ? prev.filter((v) => v !== name) : [...prev, name]);
     };
 
@@ -108,7 +121,7 @@ export default function DataOperations({ data, variables, setData, setVariables,
                         </p>
                         <label className="cursor-pointer inline-block bg-sky-500 hover:bg-sky-600 text-white px-5 py-2 rounded-lg text-sm font-medium transition-colors">
                             Browse .sav File
-                            <input type="file" accept=".sav" onChange={(e) => handleSecondaryFile(e.target.files?.[0])} className="hidden" />
+                            <input type="file" accept=".sav" onChange={(e) => { if (e.target.files?.[0]) handleSecondaryFile(e.target.files[0]); }} className="hidden" />
                         </label>
                         {secondaryFileName && (
                             <p className="text-sm text-gray-500 mt-2">

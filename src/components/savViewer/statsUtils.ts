@@ -2,20 +2,35 @@
  * Pure‑JS statistical utility functions for SAV Viewer analytics.
  * No external deps — runs entirely in the browser.
  */
+import type {
+    DataRow,
+    SavVariable,
+    ValueLabels,
+    ContingencyTable,
+    ChiSquareResult,
+    CorrelationMatrixResult,
+    PCAResult,
+    QCIssue,
+    QCResult,
+    TurfGroup,
+    DriverResult,
+    WeightInfo,
+    WeightedDescriptives,
+} from "../../types";
 
 // ─── Basic helpers ─────────────────────────────────────────────────
-export function sum(arr) {
+export function sum(arr: number[]): number {
     let s = 0;
     for (let i = 0; i < arr.length; i++) s += arr[i];
     return s;
 }
 
-export function mean(arr) {
+export function mean(arr: number[]): number {
     if (!arr.length) return 0;
     return sum(arr) / arr.length;
 }
 
-export function variance(arr, ddof = 0) {
+export function variance(arr: number[], ddof = 0): number {
     if (arr.length <= ddof) return 0;
     const m = mean(arr);
     let s = 0;
@@ -23,11 +38,11 @@ export function variance(arr, ddof = 0) {
     return s / (arr.length - ddof);
 }
 
-export function std(arr, ddof = 0) {
+export function std(arr: number[], ddof = 0): number {
     return Math.sqrt(variance(arr, ddof));
 }
 
-export function weightedMean(arr, weights) {
+export function weightedMean(arr: number[], weights: number[]): number {
     let ws = 0, s = 0;
     for (let i = 0; i < arr.length; i++) {
         s += arr[i] * weights[i];
@@ -37,8 +52,8 @@ export function weightedMean(arr, weights) {
 }
 
 // ─── Frequency table ───────────────────────────────────────────────
-export function frequency(arr) {
-    const map = {};
+export function frequency(arr: (string | number | null)[]): Record<string, number> {
+    const map: Record<string, number> = {};
     for (const v of arr) {
         const k = v == null ? "__NULL__" : String(v);
         map[k] = (map[k] || 0) + 1;
@@ -46,8 +61,8 @@ export function frequency(arr) {
     return map;
 }
 
-export function weightedFrequency(arr, weights) {
-    const map = {};
+export function weightedFrequency(arr: (string | number | null)[], weights: number[]): Record<string, number> {
+    const map: Record<string, number> = {};
     for (let i = 0; i < arr.length; i++) {
         const k = arr[i] == null ? "__NULL__" : String(arr[i]);
         map[k] = (map[k] || 0) + (weights[i] || 0);
@@ -60,8 +75,12 @@ export function weightedFrequency(arr, weights) {
  * Build a cross‑tab contingency table from two arrays.
  * Returns { rowKeys, colKeys, observed, rowTotals, colTotals, grandTotal }
  */
-export function contingencyTable(rowArr, colArr, weights = null) {
-    const rSet = new Set(), cSet = new Set();
+export function contingencyTable(
+    rowArr: (string | number | null)[],
+    colArr: (string | number | null)[],
+    weights: number[] | null = null
+): ContingencyTable {
+    const rSet = new Set<string>(), cSet = new Set<string>();
     for (let i = 0; i < rowArr.length; i++) {
         if (rowArr[i] != null) rSet.add(String(rowArr[i]));
         if (colArr[i] != null) cSet.add(String(colArr[i]));
@@ -90,7 +109,7 @@ export function contingencyTable(rowArr, colArr, weights = null) {
  * Chi‑square test for independence.
  * Returns { chiSquare, df, pValue, expected }
  */
-export function chiSquareTest(ct) {
+export function chiSquareTest(ct: ContingencyTable): ChiSquareResult {
     const { rowKeys, colKeys, observed, rowTotals, colTotals, grandTotal } = ct;
     const expected = rowKeys.map((_, ri) =>
         colKeys.map((_, ci) => (rowTotals[ri] * colTotals[ci]) / (grandTotal || 1))
@@ -115,7 +134,7 @@ export function chiSquareTest(ct) {
  * For each row, compare column pairs. Returns a 2D array of letter strings.
  * Column letters are A, B, C, ... corresponding to colKeys order.
  */
-export function significanceLetters(ct, alpha = 0.05) {
+export function significanceLetters(ct: ContingencyTable, alpha = 0.05): string[][] {
     const { rowKeys, colKeys, observed, colTotals } = ct;
     const letters = rowKeys.map(() => colKeys.map(() => ""));
     const zCrit = normalInv(1 - alpha / 2);
@@ -148,7 +167,7 @@ export function significanceLetters(ct, alpha = 0.05) {
  * Pearson correlation matrix for numeric columns.
  * Returns { varNames, matrix }
  */
-export function correlationMatrix(data, varNames) {
+export function correlationMatrix(data: DataRow[], varNames: string[]): CorrelationMatrixResult {
     const k = varNames.length;
     const cols = varNames.map((v) => data.map((r) => Number(r[v])).filter((x) => !isNaN(x)));
 
@@ -164,7 +183,7 @@ export function correlationMatrix(data, varNames) {
     return { varNames, matrix };
 }
 
-function pearson(x, y) {
+function pearson(x: number[], y: number[]): number {
     const n = Math.min(x.length, y.length);
     if (n < 2) return 0;
     const mx = mean(x.slice(0, n)), my = mean(y.slice(0, n));
@@ -179,12 +198,69 @@ function pearson(x, y) {
     return denom === 0 ? 0 : num / denom;
 }
 
+// ─── Pearson p-value (two-tailed) ─────────────────────────────────
+// lgamma via Lanczos, betacf via continued fraction, betai regularised
+// incomplete beta — all pure-JS, no deps.
+function lgamma(z: number): number {
+    const c = [0.99999999999980993, 676.5203681218851, -1259.1392167224028,
+        771.32342877765313, -176.61502916214059, 12.507343278686905,
+        -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7];
+    if (z < 0.5) return Math.log(Math.PI / Math.sin(Math.PI * z)) - lgamma(1 - z);
+    let x = z - 1;
+    let a = c[0];
+    const t = x + 7.5;
+    for (let i = 1; i < 9; i++) a += c[i] / (x + i);
+    return 0.5 * Math.log(2 * Math.PI) + (x + 0.5) * Math.log(t) - t + Math.log(a);
+}
+function betacf(x: number, a: number, b: number): number {
+    const MAX = 200, EPS = 3e-7, FM = 1e-30;
+    const qab = a + b, qap = a + 1, qam = a - 1;
+    let c = 1, d = 1 - qab * x / qap;
+    if (Math.abs(d) < FM) d = FM;
+    d = 1 / d; let h = d;
+    for (let m = 1; m <= MAX; m++) {
+        const m2 = 2 * m;
+        let aa = m * (b - m) * x / ((qam + m2) * (a + m2));
+        d = 1 + aa * d; if (Math.abs(d) < FM) d = FM;
+        c = 1 + aa / c; if (Math.abs(c) < FM) c = FM;
+        d = 1 / d; h *= d * c;
+        aa = -(a + m) * (qab + m) * x / ((a + m2) * (qap + m2));
+        d = 1 + aa * d; if (Math.abs(d) < FM) d = FM;
+        c = 1 + aa / c; if (Math.abs(c) < FM) c = FM;
+        d = 1 / d; const del = d * c; h *= del;
+        if (Math.abs(del - 1) < EPS) break;
+    }
+    return h;
+}
+function betai(x: number, a: number, b: number): number {
+    if (x <= 0) return 0; if (x >= 1) return 1;
+    const lb = lgamma(a + b) - lgamma(a) - lgamma(b);
+    const bt = Math.exp(lb + a * Math.log(x) + b * Math.log(1 - x));
+    return x < (a + 1) / (a + b + 2)
+        ? bt * betacf(x, a, b) / a
+        : 1 - bt * betacf(1 - x, b, a) / b;
+}
+/** Two-tailed p-value for Pearson r with n observations. */
+export function pearsonPValue(r: number, n: number): number {
+    if (n <= 2) return 1;
+    if (Math.abs(r) >= 1) return 0;
+    const t2 = (r * r * (n - 2)) / (1 - r * r);
+    return betai((n - 2) / (n - 2 + t2), (n - 2) / 2, 0.5);
+}
+/** Significance stars: *** p<.001, ** p<.01, * p<.05 */
+export function sigStars(p: number): string {
+    if (p < 0.001) return "***";
+    if (p < 0.01) return "**";
+    if (p < 0.05) return "*";
+    return "";
+}
+
 // ─── PCA / Factor Analysis (eigenvalue decomp via power iteration) ─
 /**
  * Simple PCA via correlation matrix + Jacobi eigenvalue algorithm.
  * Returns { eigenvalues, eigenvectors, varianceExplained }
  */
-export function pca(data, varNames, maxFactors = 5) {
+export function pca(data: DataRow[], varNames: string[], maxFactors = 5): PCAResult {
     const cm = correlationMatrix(data, varNames);
     const k = varNames.length;
     const A = cm.matrix.map((r) => [...r]);
@@ -192,7 +268,7 @@ export function pca(data, varNames, maxFactors = 5) {
     const { eigenvalues, eigenvectors } = jacobiEigen(A, k);
 
     // sort descending
-    const indices = eigenvalues.map((v, i) => i).sort((a, b) => eigenvalues[b] - eigenvalues[a]);
+    const indices = eigenvalues.map((_v, i) => i).sort((a, b) => eigenvalues[b] - eigenvalues[a]);
     const sortedEV = indices.map((i) => eigenvalues[i]);
     const sortedVec = indices.map((i) => eigenvectors.map((row) => row[i]));
     const totalVar = sum(sortedEV.filter((v) => v > 0));
@@ -208,7 +284,7 @@ export function pca(data, varNames, maxFactors = 5) {
 }
 
 /** Jacobi eigenvalue algorithm for symmetric matrices */
-function jacobiEigen(A, n, maxIter = 100) {
+function jacobiEigen(A: number[][], n: number, maxIter = 100): { eigenvalues: number[]; eigenvectors: number[][] } {
     let V = Array.from({ length: n }, (_, i) => {
         const row = Array(n).fill(0);
         row[i] = 1;
@@ -272,7 +348,7 @@ function jacobiEigen(A, n, maxIter = 100) {
  * Each item is "selected" if data[row][item] is truthy / == 1.
  * Returns sorted combos by reach for combo sizes 1..maxCombo.
  */
-export function turfAnalysis(data, items, maxCombo = 5, topN = 10) {
+export function turfAnalysis(data: DataRow[], items: string[], maxCombo = 5, topN = 10): TurfGroup[] {
     const n = data.length;
     // Build binary masks for each item
     const masks = items.map((item) => {
@@ -286,10 +362,10 @@ export function turfAnalysis(data, items, maxCombo = 5, topN = 10) {
     const results = [];
 
     for (let comboSize = 1; comboSize <= Math.min(maxCombo, items.length); comboSize++) {
-        const combos = [];
-        const combo = [];
+        const combos: Array<{ items: string[]; reach: number; reachPct: number }> = [];
+        const combo: number[] = [];
 
-        function generate(start) {
+        function generate(start: number): void {
             if (combo.length === comboSize) {
                 // compute reach
                 let reached = 0;
@@ -330,7 +406,7 @@ export function turfAnalysis(data, items, maxCombo = 5, topN = 10) {
  * Simple driver analysis: correlation of each IV with DV.
  * Returns sorted array of { variable, correlation, importance }.
  */
-export function driverAnalysis(data, ivNames, dvName) {
+export function driverAnalysis(data: DataRow[], ivNames: string[], dvName: string): DriverResult[] {
     const dvArr = data.map((r) => Number(r[dvName])).filter((v) => !isNaN(v));
     const results = ivNames.map((iv) => {
         const ivArr = data.map((r) => Number(r[iv]));
@@ -343,20 +419,20 @@ export function driverAnalysis(data, ivNames, dvName) {
             }
         }
         const r = pearson(valid, validDV);
-        return { variable: iv, correlation: r, importance: Math.abs(r) };
+        return { variable: iv, correlation: r, importance: Math.abs(r), importancePct: 0 };
     });
     results.sort((a, b) => b.importance - a.importance);
 
     // Normalize importance to 0-100
     const maxImp = results[0]?.importance || 1;
-    results.forEach((r) => (r.importancePct = (r.importance / maxImp) * 100));
+    results.forEach((r) => { r.importancePct = (r.importance / maxImp) * 100; });
     return results;
 }
 
 // ─── Data QC helpers ───────────────────────────────────────────────
-export function dataQC(data, variables, valueLabels) {
+export function dataQC(data: DataRow[], variables: SavVariable[], valueLabels: ValueLabels): QCResult {
     const n = data.length;
-    const issues = [];
+    const issues: QCIssue[] = [];
 
     // Completeness
     for (const v of variables) {
@@ -467,7 +543,7 @@ export function dataQC(data, variables, valueLabels) {
 /**
  * Apply a weight variable to data and return weighted dataset info.
  */
-export function getWeightInfo(data, weightVar) {
+export function getWeightInfo(data: DataRow[], weightVar: string): WeightInfo {
     const weights = data.map((r) => {
         const w = Number(r[weightVar]);
         return isNaN(w) || w < 0 ? 1 : w;
@@ -480,7 +556,7 @@ export function getWeightInfo(data, weightVar) {
 /**
  * Weighted descriptive stats for a numeric variable.
  */
-export function weightedDescriptives(data, varName, weights) {
+export function weightedDescriptives(data: DataRow[], varName: string, weights: number[]): WeightedDescriptives {
     const vals = [], ws = [];
     for (let i = 0; i < data.length; i++) {
         const v = Number(data[i][varName]);
@@ -504,12 +580,12 @@ export function weightedDescriptives(data, varName, weights) {
 
 // ─── Statistical distribution helpers ──────────────────────────────
 /** Chi‑square CDF via regularized incomplete gamma function */
-function chiSquareCDF(x, k) {
+function chiSquareCDF(x: number, k: number): number {
     if (x <= 0 || k <= 0) return 0;
     return lowerIncompleteGamma(k / 2, x / 2) / gamma(k / 2);
 }
 
-function lowerIncompleteGamma(a, x) {
+function lowerIncompleteGamma(a: number, x: number): number {
     // Series expansion
     let sum = 0, term = 1 / a;
     for (let n = 0; n < 200; n++) {
@@ -520,7 +596,7 @@ function lowerIncompleteGamma(a, x) {
     return Math.pow(x, a) * Math.exp(-x) * sum;
 }
 
-function gamma(z) {
+function gamma(z: number): number {
     // Lanczos approximation
     if (z < 0.5) return Math.PI / (Math.sin(Math.PI * z) * gamma(1 - z));
     z -= 1;
@@ -537,7 +613,7 @@ function gamma(z) {
 }
 
 /** Inverse normal (quantile) function — rational approximation */
-function normalInv(p) {
+function normalInv(p: number): number {
     if (p <= 0) return -Infinity;
     if (p >= 1) return Infinity;
     if (p < 0.5) return -normalInv(1 - p);

@@ -1,25 +1,32 @@
-import React, { useState, useMemo } from "react";
+import { useState, useMemo } from "react";
+import type { DataRow, SavVariable } from "../../types";
 import { turfAnalysis, driverAnalysis } from "./statsUtils";
+import SearchableSelect from "./SearchableSelect";
 
-export default function TurfAnalysis({ data, variables }) {
+interface TurfAnalysisProps {
+    data: DataRow[];
+    variables: SavVariable[];
+}
+
+export default function TurfAnalysis({ data, variables }: TurfAnalysisProps) {
     const [activeView, setActiveView] = useState("turf");
 
     // TURF state
-    const [turfVars, setTurfVars] = useState([]);
+    const [turfVars, setTurfVars] = useState<string[]>([]);
     const [maxCombo, setMaxCombo] = useState(3);
     const [topN, setTopN] = useState(10);
 
     // Driver state
     const [dvVar, setDvVar] = useState("");
-    const [ivVars, setIvVars] = useState([]);
+    const [ivVars, setIvVars] = useState<string[]>([]);
 
     const numericVars = variables.filter((v) => v.type === "numeric");
 
-    const toggleTurfVar = (name) => {
+    const toggleTurfVar = (name: string) => {
         setTurfVars((prev) => prev.includes(name) ? prev.filter((v) => v !== name) : [...prev, name]);
     };
 
-    const toggleIvVar = (name) => {
+    const toggleIvVar = (name: string) => {
         setIvVars((prev) => prev.includes(name) ? prev.filter((v) => v !== name) : [...prev, name]);
     };
 
@@ -74,19 +81,27 @@ export default function TurfAnalysis({ data, variables }) {
                             ))}
                         </div>
                         <div className="p-3 border-t bg-gray-50 flex flex-col gap-2">
-                            <div className="flex items-center gap-2 text-xs">
-                                <label className="text-gray-500">Max combo:</label>
-                                <select value={maxCombo} onChange={(e) => setMaxCombo(Number(e.target.value))}
-                                    className="border rounded px-2 py-0.5 text-xs flex-1">
-                                    {[2, 3, 4, 5].map((n) => <option key={n} value={n}>{n}</option>)}
-                                </select>
+                            <div className="flex flex-col gap-1">
+                                <label className="text-xs font-semibold text-gray-500">Max combo</label>
+                                <SearchableSelect
+                                    options={[2, 3, 4, 5].map((n) => ({ value: String(n), label: String(n) }))}
+                                    value={String(maxCombo)}
+                                    onChange={(v) => setMaxCombo(Number(v))}
+                                    placeholder="Select…"
+                                    searchPlaceholder="Search…"
+                                    minWidth="80px"
+                                />
                             </div>
-                            <div className="flex items-center gap-2 text-xs">
-                                <label className="text-gray-500">Top N:</label>
-                                <select value={topN} onChange={(e) => setTopN(Number(e.target.value))}
-                                    className="border rounded px-2 py-0.5 text-xs flex-1">
-                                    {[5, 10, 15, 20].map((n) => <option key={n} value={n}>{n}</option>)}
-                                </select>
+                            <div className="flex flex-col gap-1">
+                                <label className="text-xs font-semibold text-gray-500">Top N</label>
+                                <SearchableSelect
+                                    options={[5, 10, 15, 20].map((n) => ({ value: String(n), label: String(n) }))}
+                                    value={String(topN)}
+                                    onChange={(v) => setTopN(Number(v))}
+                                    placeholder="Select…"
+                                    searchPlaceholder="Search…"
+                                    minWidth="80px"
+                                />
                             </div>
                         </div>
                     </div>
@@ -148,13 +163,16 @@ export default function TurfAnalysis({ data, variables }) {
                     <div className="w-56 flex-shrink-0 border rounded-lg overflow-auto flex flex-col">
                         <div className="px-3 py-2 bg-gray-50 border-b">
                             <label className="text-xs font-semibold text-gray-500">Dependent Variable (DV)</label>
-                            <select value={dvVar} onChange={(e) => setDvVar(e.target.value)}
-                                className="border rounded-lg px-2 py-1 text-xs w-full mt-1">
-                                <option value="">Select…</option>
-                                {numericVars.map((v) => (
-                                    <option key={v.name} value={v.name}>{v.name}</option>
-                                ))}
-                            </select>
+                            <div className="mt-1">
+                                <SearchableSelect
+                                    options={numericVars.map((v) => ({ value: v.name, label: v.name }))}
+                                    value={dvVar}
+                                    onChange={setDvVar}
+                                    placeholder="Select DV…"
+                                    searchPlaceholder="Search variable…"
+                                    minWidth="100%"
+                                />
+                            </div>
                         </div>
                         <div className="sticky top-0 bg-gray-50 px-3 py-2 border-b">
                             <span className="text-xs font-semibold text-gray-500">Independent Variables ({ivVars.length})</span>
@@ -204,9 +222,9 @@ export default function TurfAnalysis({ data, variables }) {
                                                         <div className="flex items-center gap-2">
                                                             <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
                                                                 <div className={`h-full rounded-full transition-all ${dr.correlation >= 0 ? "bg-sky-500" : "bg-red-400"}`}
-                                                                    style={{ width: `${dr.importancePct}%` }} />
+                                                                    style={{ width: `${dr.importancePct ?? 0}%` }} />
                                                             </div>
-                                                            <span className="font-mono text-[10px] w-12 text-right">{dr.importancePct.toFixed(0)}%</span>
+                                                            <span className="font-mono text-[10px] w-12 text-right">{(dr.importancePct ?? 0).toFixed(0)}%</span>
                                                         </div>
                                                     </td>
                                                 </tr>

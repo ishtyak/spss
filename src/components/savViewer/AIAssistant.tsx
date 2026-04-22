@@ -1,7 +1,15 @@
-import React, { useState, useMemo } from "react";
+import { useState, useMemo } from "react";
+import type { DataRow, SavVariable, ValueLabels } from "../../types";
 import { frequency, mean, std, weightedFrequency, weightedDescriptives } from "./statsUtils";
 
-export default function AIAssistant({ data, variables, valueLabels, weights }) {
+interface AIAssistantProps {
+    data: DataRow[];
+    variables: SavVariable[];
+    valueLabels: ValueLabels;
+    weights: number[] | null;
+}
+
+export default function AIAssistant({ data, variables, valueLabels, weights }: AIAssistantProps) {
     const [query, setQuery] = useState("");
     const [messages, setMessages] = useState([
         { role: "system", content: "👋 Hi! I'm your data assistant. Ask me about your dataset — e.g. \"What is the average of Q1?\" or \"Show frequency of Gender\" or \"How many missing values?\"" },
@@ -67,7 +75,14 @@ export default function AIAssistant({ data, variables, valueLabels, weights }) {
 }
 
 // ─── Local NLP query handler ───────────────────────────────────────
-function analyzeQuery(q, data, variables, valueLabels, numericVars, weights) {
+function analyzeQuery(
+    q: string,
+    data: import("../../types").DataRow[],
+    variables: import("../../types").SavVariable[],
+    valueLabels: import("../../types").ValueLabels,
+    numericVars: import("../../types").SavVariable[],
+    weights: number[] | null
+): string {
     const lower = q.toLowerCase();
     const n = data.length;
 
