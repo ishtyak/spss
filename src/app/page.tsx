@@ -182,7 +182,7 @@ export default function LandingPage() {
                             </svg>
                         </div>
                         <span className="font-bold text-gray-900 text-base tracking-tight">
-                            SAV<span className="text-blue-600">ANALYZER</span>
+                            SAV<span className="text-blue-600">STUDIO</span>
                         </span>
                     </div>
 
