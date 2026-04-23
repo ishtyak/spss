@@ -855,7 +855,7 @@ export default function SavViewer() {
                             </svg>
                         </div>
                         <div className="min-w-0">
-                            <p className="text-gray-900 font-bold text-sm leading-none tracking-wide">SAVAnalyzer</p>
+                            <p className="text-gray-900 font-bold text-sm leading-none tracking-wide">SAVStudio</p>
                             <p className="text-gray-400 text-[10px] mt-0.5">SPSS Data Studio</p>
                         </div>
                         <button

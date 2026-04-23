@@ -18,11 +18,11 @@ const GOOGLE_CLIENT_ID = "490932099209-sdd4j2gtaqc8td8ldq8rp1rd94gtksv8.apps.goo
 
 export const metadata: Metadata = {
   title: {
-    default: "SAV Analyzer",
-    template: "%s | SAV Analyzer",
+    default: "SAVStudio",
+    template: "%s | SAVStudio",
   },
   description:
-    "SAV Analyzer — lightweight survey data analysis and visualization tools for SPSS datasets.",
+    "SAVStudio — lightweight survey data analysis and visualization tools for SPSS datasets.",
   keywords: [
     "survey analysis",
     "SPSS",
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     "factor analysis",
   ],
   openGraph: {
-    title: "SAV Analyzer",
+    title: "SAVStudio",
     description:
       "Analyze, visualize and export survey data from SPSS files with an intuitive interface.",
     url: "https://your-domain.example/",
