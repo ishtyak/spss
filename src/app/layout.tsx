@@ -24,6 +24,9 @@ export const metadata: Metadata = {
   description:
     "SAVStudio — lightweight survey data analysis and visualization tools for SPSS datasets.",
   keywords: [
+    "savstudio",
+    "sav-studio",
+    "sav studio",
     "sav viewer",
     "sav anlyzer online",
     "spss analysis online",
