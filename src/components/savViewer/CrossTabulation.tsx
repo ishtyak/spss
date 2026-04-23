@@ -137,7 +137,7 @@ export default function CrossTabulation({ data, variables, valueLabels, weights 
                                     </th>
                                 </tr>
                                 <tr className="bg-gray-50">
-                                    {result.ct.colKeys.map((ck, ci) => (
+                                    {result.ct.colKeys.map((ck:any, ci:any) => (
                                         <th key={ck} className="px-3 py-2 text-center text-xs font-semibold text-gray-600 border-r border-b whitespace-nowrap">
                                             {getLabel(colVar, ck)}
                                             {showSigLetters && (
@@ -149,12 +149,12 @@ export default function CrossTabulation({ data, variables, valueLabels, weights 
                                 </tr>
                             </thead>
                             <tbody>
-                                {result.ct.rowKeys.map((rk, ri) => (
+                                {result.ct.rowKeys.map((rk:any, ri:any) => (
                                     <tr key={rk} className="hover:bg-sky-50">
                                         <td className="px-3 py-2 text-xs font-medium text-gray-800 border-r border-b whitespace-nowrap">
                                             {getLabel(rowVar, rk)}
                                         </td>
-                                        {result.ct.colKeys.map((ck, ci) => {
+                                        {result.ct.colKeys.map((ck:any, ci:any) => {
                                             const obs = result.ct.observed[ri][ci];
                                             const exp = result.chi.expected[ri][ci];
                                             const colPct = result.ct.colTotals[ci] > 0 ? (obs / result.ct.colTotals[ci]) * 100 : 0;
@@ -178,7 +178,7 @@ export default function CrossTabulation({ data, variables, valueLabels, weights 
                                 {/* Column totals row */}
                                 <tr className="bg-gray-50 font-semibold">
                                     <td className="px-3 py-2 text-xs text-gray-800 border-r border-b">Total</td>
-                                    {result.ct.colKeys.map((ck, ci) => (
+                                    {result.ct.colKeys.map((ck:any, ci:any) => (
                                         <td key={ck} className="px-3 py-2 text-xs text-gray-700 border-r border-b text-center">
                                             {result.ct.colTotals[ci].toFixed(weights ? 1 : 0)}
                                         </td>

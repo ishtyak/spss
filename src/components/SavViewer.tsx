@@ -589,7 +589,7 @@ function DashboardHome({ dragActive, onDragOver, onDragLeave, onDrop, onFileChan
                         }}
                         className="relative bg-white border border-gray-100 rounded-2xl p-5 text-left shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group"
                     >
-                        <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${t.gradient} flex items-center justify-center mb-4 shadow-md group-hover:scale-105 transition-transform`}>
+                        <div className={`w-14 h-14 rounded-2xl bg-linear-to-br ${t.gradient} flex items-center justify-center mb-4 shadow-md group-hover:scale-105 transition-transform`}>
                             {t.icon}
                         </div>
                         <p className="text-sm font-bold text-gray-800">{t.label}</p>
@@ -625,11 +625,11 @@ const NAV_SECTIONS = [
         items: [
             {
                 key: "data", label: "Data View",
-                icon: <svg className="w-[18px] h-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" strokeLinejoin="round" d="M3 10h18M3 6h18M3 14h18M3 18h18" /></svg>,
+                icon: <svg className="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" strokeLinejoin="round" d="M3 10h18M3 6h18M3 14h18M3 18h18" /></svg>,
             },
             {
                 key: "variable", label: "Variable View",
-                icon: <svg className="w-[18px] h-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>,
+                icon: <svg className="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>,
             },
         ],
     },
@@ -638,19 +638,19 @@ const NAV_SECTIONS = [
         items: [
             {
                 key: "crosstab", label: "Cross-Tab",
-                icon: <svg className="w-[18px] h-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" strokeLinejoin="round" d="M16 8v8m-4-5v5m-4-2v2M4 20h16" /></svg>,
+                icon: <svg className="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" strokeLinejoin="round" d="M16 8v8m-4-5v5m-4-2v2M4 20h16" /></svg>,
             },
             {
                 key: "factor", label: "Factor & Corr",
-                icon: <svg className="w-[18px] h-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" strokeLinejoin="round" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" /><path strokeLinecap="round" strokeLinejoin="round" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" /></svg>,
+                icon: <svg className="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" strokeLinejoin="round" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" /><path strokeLinecap="round" strokeLinejoin="round" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" /></svg>,
             },
             {
                 key: "corrmatrix", label: "Corr Matrix",
-                icon: <svg className="w-[18px] h-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" strokeLinejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>,
+                icon: <svg className="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" strokeLinejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>,
             },
             {
                 key: "turf", label: "TURF & Driver",
-                icon: <svg className="w-[18px] h-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>,
+                icon: <svg className="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>,
             },
         ],
     },
@@ -659,19 +659,19 @@ const NAV_SECTIONS = [
         items: [
             {
                 key: "operations", label: "Data Ops",
-                icon: <svg className="w-[18px] h-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" strokeLinejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>,
+                icon: <svg className="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" strokeLinejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>,
             },
             {
                 key: "qc", label: "Data QC",
-                icon: <svg className="w-[18px] h-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>,
+                icon: <svg className="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>,
             },
             {
                 key: "ai", label: "AI Assistant",
-                icon: <svg className="w-[18px] h-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>,
+                icon: <svg className="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>,
             },
             {
                 key: "weight", label: "Weighting",
-                icon: <svg className="w-[18px] h-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" strokeLinejoin="round" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" /></svg>,
+                icon: <svg className="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" strokeLinejoin="round" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" /></svg>,
             },
         ],
     },
@@ -832,7 +832,7 @@ export default function SavViewer() {
 
             {/* ══════════════ SIDEBAR ══════════════════════════════════ */}
             <aside
-                className={`flex flex-col flex-shrink-0 bg-white border-r border-gray-200 transition-[width] duration-300 ease-in-out overflow-hidden ${collapsed ? "w-[60px]" : "w-[220px]"}`}
+                className={`flex flex-col shrink-0 bg-white border-r border-gray-200 transition-[width] duration-300 ease-in-out overflow-hidden ${collapsed ? "w-15" : "w-55"}`}
             >
                 {/* Logo row */}
                 {collapsed ? (
@@ -849,7 +849,7 @@ export default function SavViewer() {
                     </div>
                 ) : (
                     <div className="flex items-center gap-3 px-3 py-4 border-b border-gray-200">
-                        <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-gradient-to-br from-sky-400 to-indigo-500 flex items-center justify-center shadow-md">
+                        <div className="shrink-0 w-8 h-8 rounded-lg bg-linear-to-br from-sky-400 to-indigo-500 flex items-center justify-center shadow-md">
                             <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.2}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                             </svg>
@@ -860,7 +860,7 @@ export default function SavViewer() {
                         </div>
                         <button
                             onClick={() => setCollapsed(true)}
-                            className="flex-shrink-0 ml-auto text-gray-400 hover:text-gray-700 transition-colors rounded-md p-1 hover:bg-gray-100"
+                            className="shrink-0 ml-auto text-gray-400 hover:text-gray-700 transition-colors rounded-md p-1 hover:bg-gray-100"
                             title="Collapse"
                         >
                             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -896,7 +896,7 @@ export default function SavViewer() {
                                                     : "text-gray-500 hover:bg-gray-100 hover:text-gray-800"}
                                             ${collapsed ? "justify-center px-0" : "px-4"}`}
                                     >
-                                        <span className="flex-shrink-0">{item.icon}</span>
+                                        <span className="shrink-0">{item.icon}</span>
                                         {!collapsed && <span className="truncate font-medium text-[13px]">{item.label}</span>}
                                     </button>
                                 );
@@ -905,45 +905,43 @@ export default function SavViewer() {
                     ))}
                 </nav>
 
-                {/* Footer — user + logout */}
-                <div className="border-t border-gray-200 p-3 space-y-1">
+                {/* <div className="border-t border-gray-200 p-3 space-y-1">
 
-                    {/* User + logout */}
                     <div className={`flex items-center gap-2 rounded-lg px-2.5 py-2 ${collapsed ? "justify-center" : ""}`}>
                         {user?.picture
-                            ? <img src={user.picture} alt={user.name} className="w-5 h-5 rounded-full flex-shrink-0" />
-                            : <div className="w-5 h-5 rounded-full bg-gray-200 flex-shrink-0" />}
+                            ? <img src={user.picture} alt={user.name} className="w-5 h-5 rounded-full shrink-0" />
+                            : <div className="w-5 h-5 rounded-full bg-gray-200 shrink-0" />}
                         {!collapsed && (
                             <>
                                 <span className="text-[12px] text-gray-600 font-medium truncate flex-1 min-w-0">{user?.name ?? "User"}</span>
                                 <button
                                     onClick={logout}
                                     title="Sign out"
-                                    className="flex-shrink-0 flex items-center gap-1 text-gray-400 hover:text-red-500 transition-colors"
+                                    className="shrink-0 flex items-center gap-1 text-gray-400 hover:text-red-500 transition-colors"
                                 >
-                                    <svg className="w-[15px] h-[15px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                                     </svg>
                                 </button>
                             </>
                         )}
                     </div>
-                </div>
+                </div> */}
             </aside>
 
             {/* ══════════════ MAIN ═════════════════════════════════════ */}
             <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
 
                 {/* ── Top bar ───────────────────────────────────────── */}
-                <header className="flex-shrink-0 flex items-center justify-between px-6 h-14 bg-white border-b border-gray-200 shadow-sm">
+                <header className="shrink-0 flex items-center justify-between px-6 h-14 bg-white border-b border-gray-200 shadow-sm">
                     <div className="flex items-center gap-3 min-w-0">
                         <h2 className="text-[15px] font-semibold text-gray-800 whitespace-nowrap">{activeLabel}</h2>
                     </div>
-                    <div className="flex items-center gap-3 flex-shrink-0 ml-4">
+                    <div className="flex items-center gap-3 shrink-0 ml-4">
                         {fileInfo && (
                             <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg px-3 py-1.5">
-                                <svg className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-                                <span className="text-xs text-gray-600 font-medium max-w-[160px] truncate" title={fileName}>{fileName}</span>
+                                <svg className="w-3.5 h-3.5 text-gray-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                                <span className="text-xs text-gray-600 font-medium max-w-40 truncate" title={fileName}>{fileName}</span>
                                 <span className="text-gray-300 text-xs">·</span>
                                 <span className="text-xs text-gray-400 whitespace-nowrap">{data.length.toLocaleString()} rows · {variables.length} vars</span>
                                 {weights && <span className="text-xs text-amber-500 font-medium whitespace-nowrap">⚖ Weighted</span>}
@@ -1004,7 +1002,7 @@ export default function SavViewer() {
                                 <p className="text-gray-400 text-center py-16 text-sm">No data rows found</p>
                             ) : (
                                 <>
-                                    <div className="flex-shrink-0 flex items-center gap-3 px-4 py-2.5 border-b bg-gray-50/50">
+                                    <div className="shrink-0 flex items-center gap-3 px-4 py-2.5 border-b bg-gray-50/50">
                                         <div className="relative">
                                             <svg className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -1051,7 +1049,7 @@ export default function SavViewer() {
                                                         <td className="px-3 py-1.5 text-xs text-gray-400 border-r border-b">{ri + 1}</td>
                                                         {variables.map((v) => (
                                                             <td key={v.name}
-                                                                className="px-3 py-1.5 text-xs text-gray-700 border-r border-b whitespace-nowrap max-w-[200px] truncate"
+                                                                className="px-3 py-1.5 text-xs text-gray-700 border-r border-b whitespace-nowrap max-w-50 truncate"
                                                                 title={formatCellValue(row[v.name], v.name, valueLabels)}>
                                                                 {formatCellValue(row[v.name], v.name, valueLabels)}
                                                             </td>
@@ -1069,7 +1067,7 @@ export default function SavViewer() {
                     {/* ── Variable View ────────────────────────────── */}
                     {fileInfo && !loading && activeTab === "variable" && (
                         <div className="flex-1 flex flex-col overflow-hidden bg-white min-h-0">
-                            <div className="flex-shrink-0 flex items-center gap-3 px-4 py-2.5 border-b bg-gray-50/50">
+                            <div className="shrink-0 flex items-center gap-3 px-4 py-2.5 border-b bg-gray-50/50">
                                 <div className="relative">
                                     <svg className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -1123,8 +1121,8 @@ export default function SavViewer() {
                                                     <td className="px-3 py-2 text-xs font-medium text-gray-800 border-r border-b">{v.name}</td>
                                                     <td className="px-3 py-2 text-xs text-gray-600 border-r border-b capitalize">{v.type}</td>
                                                     <td className="px-3 py-2 text-xs text-gray-600 border-r border-b">{v.type === "string" ? v.width : 8}</td>
-                                                    <td className="px-3 py-2 text-xs text-gray-600 border-r border-b min-w-[200px] whitespace-normal break-words">{v.label}</td>
-                                                    <td className="px-3 py-2 text-xs text-gray-600 border-r border-b min-w-[220px]">
+                                                    <td className="px-3 py-2 text-xs text-gray-600 border-r border-b min-w-50 whitespace-normal wrap-break-words">{v.label}</td>
+                                                    <td className="px-3 py-2 text-xs text-gray-600 border-r border-b min-w-50">
                                                         {vl ? (
                                                             <div>{vl.map((lbl, li) => (
                                                                 <div key={li} className="whitespace-nowrap">

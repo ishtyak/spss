@@ -3,8 +3,10 @@ import React, { useState, useCallback } from "react";
 import { googleLogout } from "@react-oauth/google";
 import { AuthContext } from "./AuthContext";
 import type { GoogleUser } from "./AuthContext";
+import { useRouter } from "next/navigation";
 
 export default function AuthProvider({ children }: { children: React.ReactNode }) {
+    const router = useRouter()
     const [user, setUser] = useState<GoogleUser | null>(() => {
         try {
             const stored = sessionStorage.getItem("sav_user");
@@ -17,6 +19,8 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
     const login = useCallback((u: GoogleUser) => {
         setUser(u);
         sessionStorage.setItem("sav_user", JSON.stringify(u));
+        router.push('/analyze')
+
     }, []);
 
     const logout = useCallback(() => {

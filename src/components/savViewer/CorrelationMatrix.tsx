@@ -48,8 +48,8 @@ export default function CorrelationMatrix({ data, variables }: Props) {
     const result = useMemo(() => {
         if (selected.length < 2) return null;
         const cm = correlationMatrix(data, selected);
-        const pMatrix = cm.matrix.map((row, i) =>
-            row.map((r, j) => (i === j ? 0 : pearsonPValue(r, n))),
+        const pMatrix = cm.matrix.map((row:any, i:number) =>
+            row.map((r:any, j:any) => (i === j ? 0 : pearsonPValue(r, n))),
         );
         return { ...cm, pMatrix };
     }, [data, selected, n]);
@@ -66,18 +66,18 @@ export default function CorrelationMatrix({ data, variables }: Props) {
         const wb = XLSX.utils.book_new();
 
         const rHdr = ["Variable", ...varNames];
-        const rRows = matrix.map((row, i) => [
+        const rRows = matrix.map((row:any, i:number) => [
             varNames[i],
-            ...row.map((r, j) => (i === j ? 1 : Number(r.toFixed(4)))),
+            ...row.map((r:any, j:any) => (i === j ? 1 : Number(r.toFixed(4)))),
         ]);
         const rWS = XLSX.utils.aoa_to_sheet([rHdr, ...rRows]);
         rWS["!cols"] = [{ wch: 28 }, ...varNames.map(() => ({ wch: 10 }))];
         XLSX.utils.book_append_sheet(wb, rWS, "Correlations (r)");
 
         const pHdr = ["Variable", ...varNames];
-        const pRows = pMatrix.map((row, i) => [
+        const pRows = pMatrix.map((row:any, i:number) => [
             varNames[i],
-            ...row.map((p, j) => (i === j ? "—" : p < 0.001 ? "<.001" : p.toFixed(4))),
+            ...row.map((p:any, j:any) => (i === j ? "—" : p < 0.001 ? "<.001" : p.toFixed(4))),
         ]);
         const pWS = XLSX.utils.aoa_to_sheet([pHdr, ...pRows]);
         pWS["!cols"] = [{ wch: 28 }, ...varNames.map(() => ({ wch: 10 }))];
@@ -91,7 +91,7 @@ export default function CorrelationMatrix({ data, variables }: Props) {
         <div className="flex h-full gap-0 min-h-0 overflow-hidden">
 
             {/* ── Left panel: variable selector ── */}
-            <div className="w-56 flex-shrink-0 flex flex-col border-r border-gray-100 bg-gray-50 overflow-hidden">
+            <div className="w-56 shrink-0 flex flex-col border-r border-gray-100 bg-gray-50 overflow-hidden">
                 <div className="px-3 pt-3 pb-2 border-b border-gray-100">
                     <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">
                         Numeric Variables
@@ -130,7 +130,7 @@ export default function CorrelationMatrix({ data, variables }: Props) {
                                         type="checkbox"
                                         checked={active}
                                         onChange={() => toggle(v.name)}
-                                        className="mt-0.5 accent-blue-600 w-3.5 h-3.5 flex-shrink-0"
+                                        className="mt-0.5 accent-blue-600 w-3.5 h-3.5 shrink-0"
                                     />
                                     <span
                                         className="text-[11px] leading-snug"
@@ -156,7 +156,7 @@ export default function CorrelationMatrix({ data, variables }: Props) {
             <div className="flex-1 flex flex-col min-w-0 min-h-0 overflow-hidden">
 
                 {/* Controls bar */}
-                <div className="flex items-center gap-3 px-4 py-2.5 border-b border-gray-100 bg-white flex-wrap flex-shrink-0">
+                <div className="flex items-center gap-3 px-4 py-2.5 border-b border-gray-100 bg-white flex-wrap shrink-0">
                     <h2 className="text-sm font-semibold text-gray-800">Correlation Matrix</h2>
                     <span className="text-gray-200">|</span>
 
@@ -228,7 +228,7 @@ export default function CorrelationMatrix({ data, variables }: Props) {
                                             className="sticky left-0 bg-white z-20"
                                             style={{ minWidth: 130, width: 130 }}
                                         />
-                                        {result.varNames.map((v) => (
+                                        {result.varNames.map((v:any) => (
                                             <th
                                                 key={v}
                                                 className="pb-1 px-0.5 font-medium text-gray-600 align-bottom"
@@ -245,7 +245,7 @@ export default function CorrelationMatrix({ data, variables }: Props) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {result.varNames.map((rowVar, i) => (
+                                    {result.varNames.map((rowVar:any, i:number) => (
                                         <tr key={rowVar}>
                                             {/* Row label */}
                                             <td
@@ -256,7 +256,7 @@ export default function CorrelationMatrix({ data, variables }: Props) {
                                                 {rowVar}
                                             </td>
 
-                                            {result.varNames.map((colVar, j) => {
+                                            {result.varNames.map((colVar:any, j:number) => {
                                                 const r = result.matrix[i][j];
                                                 const p = result.pMatrix[i][j];
                                                 const stars = showStars ? sigStars(p) : "";

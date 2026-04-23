@@ -10,13 +10,25 @@ interface DataQCPanelProps {
     valueLabels: ValueLabels;
 }
 
-const SEVERITY_COLORS = {
+const SEVERITY_COLORS: Record<Severity, string> = {
     high: "bg-red-100 text-red-700 border-red-200",
     medium: "bg-amber-100 text-amber-700 border-amber-200",
     low: "bg-blue-100 text-blue-700 border-blue-200",
 };
+type Severity = "high" | "medium" | "low";
 
-const SEVERITY_BADGES = {
+type Issue = {
+    severity: Severity;
+    variable: any;
+    type: any;
+    label: any;
+    count: any;
+    message: any
+
+    // add other fields if needed
+};
+
+const SEVERITY_BADGES: Record<Severity, string> = {
     high: "bg-red-500",
     medium: "bg-amber-500",
     low: "bg-blue-500",
@@ -37,13 +49,13 @@ export default function DataQCPanel({ data, variables, valueLabels }: DataQCPane
 
     const { issues, summary } = result;
 
-    const filtered = issues.filter((iss) => {
+    const filtered = issues.filter((iss: any) => {
         if (filterType !== "all" && iss.type !== filterType) return false;
         if (filterSeverity !== "all" && iss.severity !== filterSeverity) return false;
         return true;
     });
 
-    const issueTypes = [...new Set(issues.map((i) => i.type))];
+    const issueTypes = [...new Set(issues.map((i: any) => i.type))];
 
     return (
         <div className="flex flex-col gap-4 h-full">
@@ -72,7 +84,7 @@ export default function DataQCPanel({ data, variables, valueLabels }: DataQCPane
                     <SearchableSelect
                         options={[
                             { value: "all", label: "All Types" },
-                            ...issueTypes.map((t) => ({ value: t, label: t.replace(/_/g, " ") }))
+                            ...issueTypes.map((t: any) => ({ value: t, label: t.replace(/_/g, " ") }))
                         ]}
                         value={filterType}
                         onChange={setFilterType}
@@ -123,7 +135,7 @@ export default function DataQCPanel({ data, variables, valueLabels }: DataQCPane
                                 </tr>
                             </thead>
                             <tbody>
-                                {filtered.map((iss, i) => (
+                                {filtered.map((iss: Issue, i: number) => (
                                     <tr key={i} className={`${SEVERITY_COLORS[iss.severity]} border`}>
                                         <td className="px-3 py-2 text-xs border-r border-b">{i + 1}</td>
                                         <td className="px-3 py-2 text-xs border-r border-b">

@@ -24,6 +24,13 @@ export const metadata: Metadata = {
   description:
     "SAVStudio — lightweight survey data analysis and visualization tools for SPSS datasets.",
   keywords: [
+    "sav viewer",
+    "sav anlyzer online",
+    "spss analysis online",
+    "spss viewer",
+    "IBM SPSS analyser",
+    "ibm spss analyser",
+    "sav analysis",
     "survey analysis",
     "SPSS",
     "data visualization",
@@ -34,7 +41,7 @@ export const metadata: Metadata = {
     title: "SAVStudio",
     description:
       "Analyze, visualize and export survey data from SPSS files with an intuitive interface.",
-    url: "https://your-domain.example/",
+    url: "https://savstudio.app/",
   },
   robots: {
     index: true,

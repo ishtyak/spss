@@ -20,6 +20,8 @@ const surveyData = [
     { month: "Jul", complete: 7600, partial: 700 },
 ];
 
+ 
+
 const varTypeData = [
     { name: "Numeric", value: 54, color: "#2563eb" },
     { name: "String",  value: 28, color: "#60a5fa" },
@@ -63,7 +65,7 @@ const TT = {
 // ─── App mockup ───────────────────────────────────────────────────────
 function AppMockup() {
     return (
-        <div className="relative w-full max-w-[560px] mx-auto select-none">
+        <div className="relative w-full max-w-140 mx-auto select-none">
             <div className="bg-[#1e2330] rounded-2xl shadow-2xl overflow-hidden border border-gray-200">
                 <div className="flex items-center gap-1.5 px-4 py-2.5 bg-[#2a3040]">
                     <span className="w-3 h-3 rounded-full bg-red-400" />
@@ -71,15 +73,15 @@ function AppMockup() {
                     <span className="w-3 h-3 rounded-full bg-green-400" />
                     <span className="ml-3 text-[10px] text-gray-400 font-mono">SAVAnalyzer — Data Studio</span>
                 </div>
-                <div className="flex h-[340px]">
-                    <div className="w-[120px] flex-shrink-0 bg-[#0f172a] flex flex-col py-3 gap-1 px-2">
+                <div className="flex h-85">
+                    <div className="w-30 shrink-0 bg-[#0f172a] flex flex-col py-3 gap-1 px-2">
                         {["Data View","Variable View","Cross-Tab","Factor","TURF","Data Ops","Data QC","AI Assist"].map((item, i) => (
                             <div key={item} className={`text-[10px] px-2 py-1.5 rounded-md truncate ${i === 1 ? "bg-sky-500/20 text-sky-300" : "text-slate-500"}`}>{item}</div>
                         ))}
                     </div>
                     <div className="flex-1 bg-white flex flex-col overflow-hidden">
                         <div className="flex items-center h-9 border-b border-gray-100 px-3 gap-4 bg-gray-50">
-                            <span className="text-[10px] font-medium text-blue-600 border-b-2 border-blue-600 pb-[7px] pt-1">Variable View</span>
+                            <span className="text-[10px] font-medium text-blue-600 border-b-2 border-blue-600 pb-1.75 pt-1">Variable View</span>
                             <span className="text-[10px] text-gray-400">Data View</span>
                         </div>
                         <div className="flex text-[9px] font-semibold text-gray-500 bg-gray-100 px-2 border-b border-gray-200">
@@ -152,7 +154,7 @@ function GoogleSignInButton({ onSuccess, variant = "outline" }: { onSuccess: (u:
 
     return (
         <button onClick={() => login()} className={cls}>
-            <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                 <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
                 <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
@@ -192,7 +194,7 @@ export default function LandingPage() {
                     </div>
 
                     <div className="flex items-center gap-3">
-                        <GoogleSignInButton onSuccess={login} variant="outline" />
+                        {/* <GoogleSignInButton onSuccess={login} variant="outline" /> */}
                         <button
                             onClick={() => login({ sub: "", name: "Demo User", email: "", picture: "", given_name: "Demo", family_name: "User" })}
                             className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2.5 rounded-lg shadow-md hover:shadow-lg transition-all duration-200"
@@ -387,7 +389,7 @@ export default function LandingPage() {
                 <div className="max-w-2xl mx-auto text-center">
                     <h2 className="text-3xl font-bold text-white mb-4">Ready to explore your data?</h2>
                     <p className="text-blue-100 mb-10">Sign in with Google and drop your first .sav file in seconds.</p>
-                    <GoogleSignInButton onSuccess={login} variant="solid" />
+                    {/* <GoogleSignInButton onSuccess={login} variant="solid" /> */}
                     <p className="text-blue-200 text-xs mt-6">Your data never leaves your browser — all processing is local.</p>
                 </div>
             </section>

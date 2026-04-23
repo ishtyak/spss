@@ -73,7 +73,7 @@ export default function FactorAnalysis({ data, variables }: FactorAnalysisProps)
 
             <div className="flex gap-4 flex-1 overflow-hidden">
                 {/* Variable selector */}
-                <div className="w-56 flex-shrink-0 border rounded-lg overflow-auto">
+                <div className="w-56 shrink-0 border rounded-lg overflow-auto">
                     <div className="sticky top-0 bg-gray-50 px-3 py-2 border-b flex justify-between items-center">
                         <span className="text-xs font-semibold text-gray-500">Numeric Variables ({selectedVars.length})</span>
                         <div className="flex gap-1">
@@ -105,7 +105,7 @@ export default function FactorAnalysis({ data, variables }: FactorAnalysisProps)
                                 <thead>
                                     <tr className="bg-gray-100">
                                         <th className="px-2 py-1.5 border-r border-b text-left font-semibold text-gray-600 sticky left-0 bg-gray-100 z-10"></th>
-                                        {corrResult.varNames.map((v) => (
+                                        {corrResult.varNames.map((v:any) => (
                                             <th key={v} className="px-2 py-1.5 border-r border-b font-semibold text-gray-600 whitespace-nowrap" style={{ writingMode: "vertical-rl" }}>
                                                 {v}
                                             </th>
@@ -113,12 +113,12 @@ export default function FactorAnalysis({ data, variables }: FactorAnalysisProps)
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {corrResult.varNames.map((rv, ri) => (
+                                    {corrResult.varNames.map((rv:any, ri:any) => (
                                         <tr key={rv}>
                                             <td className="px-2 py-1.5 border-r border-b font-semibold text-gray-700 whitespace-nowrap sticky left-0 bg-white z-10">
                                                 {rv}
                                             </td>
-                                            {corrResult.varNames.map((cv, ci) => {
+                                            {corrResult.varNames.map((cv:any, ci:any) => {
                                                 const val = corrResult.matrix[ri][ci];
                                                 return (
                                                     <td key={cv} className="px-2 py-1.5 border-r border-b text-center font-mono"
@@ -149,8 +149,8 @@ export default function FactorAnalysis({ data, variables }: FactorAnalysisProps)
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {pcaResult.eigenvalues.map((ev, i) => {
-                                            const cumVar = pcaResult.varianceExplained.slice(0, i + 1).reduce((s, v) => s + v, 0);
+                                        {pcaResult.eigenvalues.map((ev:any, i:number) => {
+                                            const cumVar = pcaResult.varianceExplained.slice(0, i + 1).reduce((s:any, v:any) => s + v, 0);
                                             return (
                                                 <tr key={i} className={`hover:bg-sky-50 ${ev >= 1 ? "" : "opacity-50"}`}>
                                                     <td className="px-3 py-1.5 text-xs font-medium text-gray-800 border-r border-b">Factor {i + 1}</td>
@@ -178,16 +178,16 @@ export default function FactorAnalysis({ data, variables }: FactorAnalysisProps)
                                     <thead>
                                         <tr className="bg-gray-100">
                                             <th className="px-3 py-2 text-left font-semibold text-gray-600 border-r border-b sticky left-0 bg-gray-100 z-10">Variable</th>
-                                            {pcaResult.eigenvalues.map((_, i) => (
+                                            {pcaResult.eigenvalues.map((_:any, i:number) => (
                                                 <th key={i} className="px-3 py-2 text-center font-semibold text-gray-600 border-r border-b">F{i + 1}</th>
                                             ))}
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {pcaResult.varNames.map((vn, vi) => (
+                                        {pcaResult.varNames.map((vn:any, vi:any) => (
                                             <tr key={vn} className="hover:bg-sky-50">
                                                 <td className="px-3 py-1.5 font-medium text-gray-700 border-r border-b whitespace-nowrap sticky left-0 bg-white z-10">{vn}</td>
-                                                {pcaResult.eigenvectors.map((vec, fi) => {
+                                                {pcaResult.eigenvectors.map((vec:any, fi:any) => {
                                                     const loading = vec[vi] * Math.sqrt(pcaResult.eigenvalues[fi]);
                                                     const abs = Math.abs(loading);
                                                     return (

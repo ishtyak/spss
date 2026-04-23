@@ -16,7 +16,7 @@ import type {
     DriverResult,
     WeightInfo,
     WeightedDescriptives,
-} from "../../types";
+} from "@/utils/types";
 
 // ─── Basic helpers ─────────────────────────────────────────────────
 export function sum(arr: number[]): number {

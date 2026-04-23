@@ -176,7 +176,7 @@ export default function DataOperations({ data, variables, setData, setVariables,
                                 className="border rounded-lg px-3 py-1.5 text-sm w-48" />
                         </div>
                     </div>
-                    <div className="border rounded-lg p-3 flex-1 overflow-auto max-h-[300px]">
+                    <div className="border rounded-lg p-3 flex-1 overflow-auto max-h-75">
                         <p className="text-xs font-semibold text-gray-500 mb-2">Select variables to stack ({stackVars.length} selected):</p>
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-1">
                             {variables.filter((v) => v.type === "numeric").map((v) => (
