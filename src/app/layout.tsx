@@ -17,6 +17,7 @@ const geistMono = Geist_Mono({
 const GOOGLE_CLIENT_ID = "490932099209-sdd4j2gtaqc8td8ldq8rp1rd94gtksv8.apps.googleusercontent.com";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://savstudio.app"),
   title: {
     default: "SAVStudio",
     template: "%s | SAVStudio",
@@ -43,15 +44,25 @@ export const metadata: Metadata = {
     "cross tabulation",
     "factor analysis",
   ],
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     title: "SAVStudio",
     description:
       "Analyze, visualize and export survey data from SPSS files with an intuitive interface.",
     url: "https://savstudio.app/",
+    siteName: "SAVStudio",
+    type: "website",
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-snippet": -1,
+    },
   },
 };
 
