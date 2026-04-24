@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://savstudio.app
+
+# Sitemaps
+Sitemap: https://savstudio.app/sitemap.xml
